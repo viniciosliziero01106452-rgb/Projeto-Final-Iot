@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trem da Alegria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #303030 0%, #ff0000 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            z-index: 1;
+            color: white;
+            font-size: 1.5em;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            text-align: center;
+            color: #c41e3a;
+            font-size: 3.5em;
+            margin-bottom: 40px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .link-box {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b1429 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(196, 30, 58, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .link-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(196, 30, 58, 0.5);
+        }
+
+        .link-box a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .names-box {
+            background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(44, 95, 45, 0.3);
+        }
+
+        .names-box h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .names-box p {
+            color: white;
+            font-size: 1em;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+
+        .counter-box {
+            background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid #1e4620;
+            box-shadow: 0 8px 20px rgba(44, 95, 45, 0.3);
+        }
+
+        .counter-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .counter-value {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 4px solid #c41e3a;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+        }
+
+        .control-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b1429 100%);
+            color: white;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.8em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(196, 30, 58, 0.4);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .start-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(196, 30, 58, 0.6);
+        }
+
+        .start-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .countdown-display {
+            font-size: 5em;
+            font-weight: bold;
+            color: #c41e3a;
+            margin: 20px 0;
+            min-height: 100px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-message {
+            font-size: 1.8em;
+            color: #2c5f2d;
+            margin: 20px 0;
+            min-height: 50px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 968px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .countdown-display {
+                font-size: 3em;
+            }
+
+            .start-button {
+                font-size: 1.4em;
+                padding: 15px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚂 Trem da Alegria 🎉</h1>
+        
+        <div class="content">
+            <!-- Coluna Esquerda -->
+            <div class="sidebar">
+                <div class="link-box">
+                    <a href="https://docs.google.com/presentation/" target="_blank">Link do Slide</a>
+                </div>
+                <div class="link-box">
+                    <a href="https://docs.google.com/document/" target="_blank">Link do TCC</a>
+                </div>
+                <div class="names-box">
+                    <h3>Equipe</h3>
+                    <p>VINICIOS</p>
+                    <p>ANDRÉ</p>
+                    <p>MURILO</p>
+                    <p>KAYKY</p>
+                </div>
+            </div>
+
+            <!-- Coluna Central - Vídeo -->
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    title="Trem da Alegria" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Coluna Direita -->
+            <div class="sidebar">
+                <div class="counter-box">
+                    <h3>LEDs Ligados</h3>
+                    <div class="counter-value" id="ledCounter">0</div>
+                </div>
+                <div class="counter-box">
+                    <h3>Voltas Completas</h3>
+                    <div class="counter-value" id="lapCounter">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Controle -->
+        <div class="control-section">
+            <div class="countdown-display" id="countdownDisplay"></div>
+            <div class="status-message" id="statusMessage"></div>
+            <button class="start-button" id="startButton">Iniciar Trem</button>
+        </div>
+    </div>
+
+    <script>
+        let trainRunning = false;
+        let ledCount = 0;
+        let lapCount = 0;
+        let ledInterval;
+        let lapInterval;
+
+        const startButton = document.getElementById('startButton');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        const statusMessage = document.getElementById('statusMessage');
+        const ledCounter = document.getElementById('ledCounter');
+        const lapCounter = document.getElementById('lapCounter');
+
+        // Criar flocos de neve
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 5 + 's';
+            snowflake.style.opacity = Math.random() * 0.6 + 0.4;
+            snowflake.style.fontSize = Math.random() * 15 + 15 + 'px';
+            
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => {
+                snowflake.remove();
+            }, 10000);
+        }
+
+        // Criar neve continuamente
+        setInterval(createSnowflake, 150);
+
+        function startCountdown() {
+            startButton.disabled = true;
+            let count = 10;
+            
+            countdownDisplay.textContent = count;
+            statusMessage.textContent = 'Preparando para iniciar...';
+
+            const countdownInterval = setInterval(() => {
+                count--;
+                countdownDisplay.textContent = count;
+                
+                if (count === 0) {
+                    clearInterval(countdownInterval);
+                    countdownDisplay.textContent = '';
+                    statusMessage.textContent = 'Trem em movimento!';
+                    startTrain();
+                }
+            }, 1000);
+        }
+
+        function startTrain() {
+            trainRunning = true;
+            ledCount = 0;
+            lapCount = 0;
+            ledCounter.textContent = ledCount;
+            lapCounter.textContent = lapCount;
+
+            // Incrementar LEDs gradualmente (50 LEDs em 5 segundos)
+            ledInterval = setInterval(() => {
+                if (ledCount < 50) {
+                    ledCount++;
+                    ledCounter.textContent = ledCount;
+                }
+            }, 100);
+
+            // Simular voltas completas (a cada 8 segundos)
+            lapInterval = setInterval(() => {
+                lapCount++;
+                lapCounter.textContent = lapCount;
+                
+                // Reiniciar LEDs quando completar uma volta
+                ledCount = 0;
+                ledCounter.textContent = ledCount;
+                
+                // Incrementar LEDs novamente
+                clearInterval(ledInterval);
+                ledInterval = setInterval(() => {
+                    if (ledCount < 50) {
+                        ledCount++;
+                        ledCounter.textContent = ledCount;
+                    }
+                }, 100);
+                
+                statusMessage.textContent = `Volta ${lapCount} completa! LEDs reiniciados.`;
+            }, 8000);
+        }
+
+        function stopTrain() {
+            trainRunning = false;
+            clearInterval(ledInterval);
+            clearInterval(lapInterval);
+            startButton.disabled = false;
+            countdownDisplay.textContent = '';
+            statusMessage.textContent = 'Trem parado. Pronto para nova partida!';
+        }
+
+        startButton.addEventListener('click', () => {
+            if (!trainRunning) {
+                startCountdown();
+            }
+        });
+
+        // Criar alguns flocos iniciais
+        for(let i = 0; i < 20; i++) {
+            setTimeout(createSnowflake, i * 100);
+        }
+    </script>
+</body>
+</html>
