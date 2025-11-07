@@ -1,82 +1,196 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Documentos</title>
+    <title>Trem da Alegria - Projeto Natalino</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Relatório de Atividades</h1>
-    
-    <form id="documentForm">
-        <fieldset>
-            <legend>Informações Gerais</legend>
-            <label>Título:</label>
-            <input type="text" id="titulo" required>
+    <div class="ambient-light light-red"></div>
+    <div class="ambient-light light-green"></div>
+    <div class="ambient-light light-blue"></div>
+    <div class="ambient-light light-gold"></div>
 
-            <label>Tipo:</label>
-            <select id="tipo">
-                <option value="Relatório">Relatório</option>
-                <option value="Planejamento">Planejamento</option>
-            </select>
+    <div class="christmas-tree tree-left">🎄</div>
+    <div class="christmas-tree tree-right">🎄</div>
 
-            <label>Ano:</label>
-            <input type="number" id="ano" min="1900" max="2100" required>
+    <div class="ornament ornament-1">🎀</div>
+    <div class="ornament ornament-2">⭐</div>
+    <div class="ornament ornament-3">🔔</div>
+    <div class="ornament ornament-4">🎁</div>
 
-            <label>Status:</label>
-            
-            <select id="status">
-                <option value="Aprovado">Aprovado</option>
-                <option value="Em revisão">Em revisão</option>
-                <option value="Cancelado">Cancelado</option>    
-            </select>
-
-            <label>Data de Envio:</label>
-            <input type="datetime-local" id="data_envio" required>
-        </fieldset>
-
-        <fieldset>
-            <legend>Responsável</legend>
-            <label>Nome</label>
-            <input type="text" id="nome_responsavel" required>
-
-            <label>Cargo:</label>
-            <input type="text" id="cargo_responsavel"  required>
-
-            <label>Departamento:</label>
-            <input type="text" id="departamento_responsavel" required>
-        </fieldset>
-
-        <!-- fieldset>legend/input#palavra_input/ul#lista_palavras -->
-        <fieldset>
-            <legend>Palavras Chaves</legend>
-            <input type="text" id="palavra_input" placeholder="Digite e pressione Enter">
-            <ul id="lista_palavras"></ul>
-        </fieldset>
-
-        <fieldset>
-            <legend>Revisões</legend>
-            <div id="revisoesContainer"></div>
-            <button id="addRevisao">+ Adicionar Revisão</button>
-        </fieldset>
-
-        <!-- div.botoes-container>button:submit.gerarBtn/button:button#gerarPdfBtn.pdfBtn -->
-        
-        <div class="botoes-container">
-            <button type="submit" class="gerarBtn">Gerar Documento</button>
-            <button type="button" id="gerarPdfBtn" class="pdfBtn">Gerar PDF</button>
+    <div class="santa-container">
+        <div class="santa">
+            <span>🎅</span>
+            <span>🦌</span>
+            <span>🦌</span>
+            <span>🦌</span>
         </div>
-    </form>
-
-    <!-- div.header-container>h1/button:button#copyJsonBtn.copy-btn -->
-    
-    <div class="header-container">
-        <h2>Documento Gerado</h2>
-        <button type="button" id="copyJsonBtn" class="copy-btn">Copiar JSON</button>
     </div>
-    <pre id="jsonOutput"></pre>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="script.js"></script>
+
+    <div class="container">
+        <div class="garland">
+            <div class="garland-light"></div>
+            <div class="garland-light"></div>
+            <div class="garland-light"></div>
+            <div class="garland-light"></div>
+            <div class="garland-light"></div>
+            <div class="garland-light"></div>
+            <div class="garland-light"></div>
+            <div class="garland-light"></div>
+        </div>
+
+        <div class="bell bell-left">🔔</div>
+        <div class="bell bell-right">🔔</div>
+
+        <div class="gift gift-1">🎁</div>
+        <div class="gift gift-2">🎁</div>
+        <div class="gift gift-3">🎀</div>
+        <div class="gift gift-4">🎀</div>
+
+        <h1>🎄 Trem da Alegria 🚂</h1>
+        
+        <div class="content">
+            <div class="sidebar">
+                <div class="link-box">
+                    <a href="https://docs.google.com/presentation/" target="_blank">📊 Slides</a>
+                </div>
+                <div class="link-box">
+                    <a href="https://docs.google.com/document/" target="_blank">📄 Documento TCC</a>
+                </div>
+                <div class="names-box">
+                    <h3>🎅 Equipe do Projeto</h3>
+                    <p>⭐ VINICIOS</p>
+                    <p>⭐ ANDRÉ</p>
+                    <p>⭐ MURILO</p>
+                    <p>⭐ KAYKY</p>
+                </div>
+            </div>
+
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    title="Trem da Alegria - Demonstração" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div class="sidebar">
+                <div class="counter-box">
+                    <h3>💡 LEDs Ativos</h3>
+                    <div class="counter-value" id="ledCounter">0</div>
+                </div>
+                <div class="counter-box">
+                    <h3>🔄 Voltas na Pista</h3>
+                    <div class="counter-value" id="lapCounter">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-section">
+            <div class="countdown-display" id="countdownDisplay"></div>
+            <div class="status-message" id="statusMessage">🎄 Pronto para iniciar! 🎄</div>
+            <button class="start-button" id="startButton">🎅 Iniciar Trem 🎄</button>
+        </div>
+    </div>
+
+    <!-- Script que gera os flocos, estrelas, trem, etc -->
+    <script>
+        let trainRunning = false;
+        let ledCount = 0;
+        let lapCount = 0;
+        let ledInterval;
+        let lapInterval;
+
+        const startButton = document.getElementById('startButton');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        const statusMessage = document.getElementById('statusMessage');
+        const ledCounter = document.getElementById('ledCounter');
+        const lapCounter = document.getElementById('lapCounter');
+
+        function createStars() {
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 70 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(star);
+            }
+        }
+
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            const snowTypes = ['❄', '❅', '❆'];
+            snowflake.innerHTML = snowTypes[Math.floor(Math.random() * snowTypes.length)];
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 4 + 's';
+            snowflake.style.opacity = Math.random() * 0.6 + 0.4;
+            snowflake.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(snowflake);
+            setTimeout(() => snowflake.remove(), 10000);
+        }
+
+        setInterval(createSnowflake, 120);
+
+        function startCountdown() {
+            startButton.disabled = true;
+            let count = 10;
+            countdownDisplay.textContent = count;
+            statusMessage.textContent = '🎅 Contagem regressiva iniciada!';
+            const countdownInterval = setInterval(() => {
+                count--;
+                countdownDisplay.textContent = count;
+                if (count === 5) statusMessage.textContent = '🎄 Preparando o trem...';
+                if (count === 0) {
+                    clearInterval(countdownInterval);
+                    countdownDisplay.textContent = '🎉';
+                    statusMessage.textContent = '🚂 Trem em movimento! Boa viagem! 🎊';
+                    startTrain();
+                }
+            }, 1000);
+        }
+
+        function startTrain() {
+            trainRunning = true;
+            ledCount = 0;
+            lapCount = 0;
+            ledCounter.textContent = ledCount;
+            lapCounter.textContent = lapCount;
+
+            ledInterval = setInterval(() => {
+                if (ledCount < 50) {
+                    ledCount++;
+                    ledCounter.textContent = ledCount;
+                }
+            }, 100);
+
+            lapInterval = setInterval(() => {
+                lapCount++;
+                lapCounter.textContent = lapCount;
+                ledCount = 0;
+                ledCounter.textContent = ledCount;
+                clearInterval(ledInterval);
+                ledInterval = setInterval(() => {
+                    if (ledCount < 50) {
+                        ledCount++;
+                        ledCounter.textContent = ledCount;
+                    }
+                }, 100);
+                statusMessage.textContent = `🎄 Volta ${lapCount} completa! LEDs reiniciados. 🎁`;
+            }, 8000);
+        }
+
+        createStars();
+        for (let i = 0; i < 40; i++) setTimeout(createSnowflake, i * 80);
+    </script>
 </body>
 </html>

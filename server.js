@@ -1,67 +1,82 @@
-// 1. Import as bibliotecas
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
+const mysql = require('mysql2');
+const path = require('path');
 
-// 2. configurar o servidor Express
 const app = express();
-app.use(cors());// permite que o front end acesse este back-end 
-app.use(express.json());// permite que o servidor entenda JSON
+app.use(cors());
+app.use(express.json());
 
-// 3. conectar ao mongoDb
-const MongoURI = ''; // colocar a url no seu projeto no mongoDB
-mongoose.connect(MongoURI, {useNeParser: true, useUnifieldTopology: true})
-    .then(() => console.log('Conectado ao MongoDB com sucesso!'))
-    .catch(err => console.error('Error ao conectar ao MongoDB: ', err));
+// Servir os arquivos HTML, CSS e JS da pasta "public"
+app.use(express.static(path.join(__dirname, 'public')));
 
-// 4. Definir o "Schema" - A estrutura dos seus dados
-// Isso deve corresponder á estrutura do seu formulário
-const relatorioSchema = new mongoose.Schema({
-    titulo: String,
-    tipo: String,
-    ano: Number,
-    status: String,
-    data_envio: Date,
-    rsponsavel:{
-        nome: String,
-        cargo: String,
-        departamento: String
-    },
-    palavras_chave: [String],
-    revisoes: [{
-        data: Date,
-        revisado_por: String,
-        comentario: String
-    }]
+// Conexão MySQL
+const db = mysql.createConnection({
+  host: 'paparella.com.br',
+  user: 'paparell_trem',
+  password: '@Senai2025',
+  database: 'paparell_trem'
 });
 
-// 5. Criar o "Model" - O objeto que representa sua coleção na banco
-const Relatório = mongoose.model('Relatorio', relatorioSchema);
+db.connect(err => {
+  if (err) {
+    console.error('Erro ao conectar ao MySQL:', err);
+  } else {
+    console.log('Conectado ao banco de dados MySQL!');
+  }
+});
 
-// 6. Criar a "Rota" ou "Endpoind" - o URL que o front-end irá chamar
-app.post('./salvar-relatorio', async(req, res) => {
-    try{
-        //Pega os dados que o front-end enviou (estão em req.boby)
-        const dadosDoFormulário = req.boby;
-        
-        // Cria um novo documento com base nos dados
-        const novoRelatorio = new Relatorio(dadosDoFormulário)
+// Rota para salvar relatório
+app.post('/salvar-relatorio', (req, res) => {
+  const dados = req.body;
+  const sql = `
+    INSERT INTO relatorios 
+    (titulo, tipo, ano, status, data_envio, nome_responsavel, cargo_responsavel, departamento_responsavel)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 
-        // Salva o documento no banco da dados
-        await novoRelatorio.save();
+  const valores = [
+    dados.titulo,
+    dados.tipo,
+    dados.ano,
+    dados.status,
+    dados.data_envio,
+    dados.responsavel.nome,
+    dados.responsavel.cargo,
+    dados.responsavel.departamento
+  ];
 
-        // Envia uma resposta de sucesso de volta para o front-end
-        res.status(201).json({message: 'Relatório salvo com sucesso!'});
-        console.log('Relatório salvo: ', novoRelatorio.titulo);
-    }catch(error){
-        // SE DER ERRO, ENVIA UMA MENSAGEM DE ERRO
-        res.status(500), json({ message: 'Ocorreu um erro ao salvar o ralatório.',error: error});
-            console.error('Erro ao salvar: ', error);
+  db.query(sql, valores, (err, result) => {
+    if (err) {
+      console.error('Erro ao inserir relatório:', err);
+      return res.status(500).json({ message: 'Erro ao salvar relatório.', error: err });
     }
+
+    const relatorioId = result.insertId;
+
+    // Palavras-chave
+    if (dados.palavras_chave?.length) {
+      dados.palavras_chave.forEach(p =>
+        db.query('INSERT INTO palavras_chave (relatorio_id, palavra) VALUES (?, ?)', [relatorioId, p])
+      );
+    }
+
+    // Revisões
+    if (dados.revisoes?.length) {
+      dados.revisoes.forEach(r =>
+        db.query(
+          'INSERT INTO revisoes (relatorio_id, data, revisado_por, comentario) VALUES (?, ?, ?, ?)',
+          [relatorioId, r.data, r.revisado_por, r.comentario]
+        )
+      );
+    }
+
+    res.status(201).json({ message: 'Relatório salvo com sucesso!', id: relatorioId });
+  });
 });
 
-// 7. Iniciar o servidor.
+// Porta do servidor
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor back-end rodando na porta ${PORT}`);
+  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
